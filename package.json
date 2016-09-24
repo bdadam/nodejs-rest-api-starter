@@ -10,14 +10,19 @@
     "type": "git",
     "url": "git+https://github.com/bdadam/nodejs-rest-api-starter.git"
   },
-  "keywords": ["rest", "boilerplate", "express", "starter kit"],
+  "keywords": [
+    "rest",
+    "boilerplate",
+    "express",
+    "starter kit"
+  ],
   "author": "Adam Beres-Deak <me@bdadam.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bdadam/nodejs-rest-api-starter/issues"
   },
   "homepage": "https://github.com/bdadam/nodejs-rest-api-starter#readme",
-  "dependecies": {
+  "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "nedb": "^1.8.0"
