@@ -97,6 +97,7 @@ describe('API Tests', () => {
                     success: false,
                     errors: [
                         '"title" is required',
+                        '"fuel" is required',
                         '"price" is required',
                         '"new" is required',
                         '"mileage" is required',

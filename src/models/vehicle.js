@@ -8,7 +8,7 @@ const find = suspend.promise(function*() {
 
 const vehicleSchema = Joi.object().keys({
     title: Joi.string().required(),
-    fuel: Joi.valid('gasoline', 'diesel'),
+    fuel: Joi.valid('gasoline', 'diesel').required(),
     price: Joi.number().integer().required(),
     new: Joi.boolean().required(),
     mileage: Joi.number().integer().required()
