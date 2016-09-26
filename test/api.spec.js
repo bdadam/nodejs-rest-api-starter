@@ -2,7 +2,7 @@ const sinon = require('sinon');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const expect = chai.expect;
-// const sinon = require('sinon');
+var request = require('supertest');
 
 const app = require('../src/app');
 const vehicleDB = require('../src/database').vehicleDB;
@@ -88,16 +88,23 @@ describe('API Tests', () => {
 
         });
 
-        it('Some parameters are invalid and request gets rejected', () => {
-            // const invalidVehicleWithOnlyTitle = {
-            //     title: 'Title without additional details'
-            // };
-
-            // return chai.request(app).post('/api/vehicles').send(invalidVehicleWithOnlyTitle).then(res => {
-            //     expect(res).to.have.status(400);
-            //     expect(res).to.be.json;
-                
-            // });
+        it('Some parameters are invalid and request gets rejected', done => {
+            const invalidVehicle = {};
+            request(app).post('/api/vehicles').send(invalidVehicle).end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res).to.be.json;
+                expect(res.body).to.deep.equal({
+                    success: false,
+                    errors: [
+                        '"title" is required',
+                        '"price" is required',
+                        '"new" is required',
+                        '"mileage" is required',
+                        '"firstregistration" is required'
+                    ]
+                });
+                done();
+            });
         });
     });
 

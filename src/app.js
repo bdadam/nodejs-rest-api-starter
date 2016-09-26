@@ -21,7 +21,12 @@ app.get('/api/vehicles', (req, res) => {
 app.post('/api/vehicles', bodyParser.json(), (req, res) => {
     Vehicle.insert(req.body)
         .then(v => res.json(v))
-        .catch(e => res.status(400).json(e));
+        .catch(e => {
+            res.status(400).json({
+                success: false,
+                errors: e.messages
+            });
+        });
 });
 
 module.exports = app;

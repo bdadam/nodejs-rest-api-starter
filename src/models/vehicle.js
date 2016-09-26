@@ -9,20 +9,26 @@ const find = suspend.promise(function*() {
 const vehicleSchema = Joi.object().keys({
     title: Joi.string().required(),
     fuel: Joi.valid('gasoline', 'diesel'),
-    price: Joi.number().integer(),
-    new: Joi.boolean(),
-    mileage: Joi.number().integer()
-                .when('new', { is: false, then: Joi.required() })
+    price: Joi.number().integer().required(),
+    new: Joi.boolean().required(),
+    mileage: Joi.number().integer().required()
                 .when('new', { is: true, then: Joi.strip() }),
-    firstregistration: Joi.date()
-                .when('new', { is: false, then: Joi.required() })
+    firstregistration: Joi.date().required()
                 .when('new', { is: true, then: Joi.strip() })
-});
-
-const validateVehicle = (vehicle, cb) => vehicleSchema.validate(vehicle, { stripUnknown: true }, cb);
+}).options({ stripUnknown: true, abortEarly: false });
 
 const create = suspend.promise(function*(vehicle) {
-    const sanitizedVehicle = yield validateVehicle(vehicle, suspend.resume());
+    const [validationErrors, sanitizedVehicle] = yield vehicleSchema.validate(vehicle, suspend.resumeRaw());
+
+    if(validationErrors) {
+        const err = new Error('Validation failed.');
+        if (validationErrors.details) {
+            err.messages = validationErrors.details.map(d => d.message);
+        }
+
+        throw err;
+    }
+
     return yield vehicleDB.insert(sanitizedVehicle, suspend.resume());
 });
 
