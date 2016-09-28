@@ -50,7 +50,7 @@ const update = suspend.promise(function*(id, vehicle) {
 
     sanitizedVehicle._id = id;
 
-    yield vehicleDB.update({ _id: id }, sanitizedVehicle, { multi: false, upsert: true }, suspend.resume());
+    yield vehicleDB.update({ _id: id }, sanitizedVehicle, { multi: false, upsert: false }, suspend.resume());
 
     return findOne({ _id: id });
 });

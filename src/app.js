@@ -37,17 +37,16 @@ app.post('/api/vehicles', bodyParser.json(), (req, res) => {
 
 app.put('/api/vehicles/:id', bodyParser.json(), (req, res) => {
     Vehicle.update(req.params.id, req.body)
-        .then(v => res.json(v))
+        .then(v => v ? res.json(v) : res.status(404).json())
         .catch(e => res.status(400).json({
-            success: false,
             errors: e.messages
         }));
 });
 
 app.delete('/api/vehicles/:id', (req, res) => {
     Vehicle.remove(req.params.id)
-        .then(success => res.status(success ? 200 : 404).send({ success }))
-        .catch(e => res.status(500).send({ success: false }));
+        .then(success => res.status(success ? 204 : 404).send())
+        .catch(e => res.status(500).json());
 });
 
 module.exports = app;

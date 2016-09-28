@@ -107,7 +107,7 @@ describe('API Tests', () => {
 
     describe('PUT', () => {
 
-        it('Item is overwritten if it already exists', done => {
+        it('Item is overwritten with new values', done => {
             const id = testVehicles[0]._id;
             const newVehicle = Object.assign({}, testVehicles[0], { title: 'TITLE 2' });
 
@@ -120,18 +120,10 @@ describe('API Tests', () => {
             });
         });
 
-        it('Item is created if it does not exist', done => {
+        it('Item is not created if it does not exist', done => {
             const validVehicle = { title: 'Title', price: 123, fuel: 'gasoline', new: false, mileage: 123400, firstregistration: new Date(2010, 0, 1) };
             request(app).put('/api/vehicles/123').send(validVehicle).end((err, res) => {
-                res.should.have.status(200);
-                res.should.be.json;
-
-                res.body.should.have.property('title', validVehicle.title);
-                res.body.should.have.property('price', validVehicle.price);
-                res.body.should.have.property('fuel', validVehicle.fuel);
-                res.body.should.have.property('new', validVehicle.new);
-                res.body.should.have.property('mileage', validVehicle.mileage);
-                res.body.should.have.property('firstregistration', validVehicle.firstregistration.toISOString());
+                res.should.have.status(404);
                 done();
             });
         });
@@ -142,7 +134,6 @@ describe('API Tests', () => {
                 res.should.have.status(400);
                 res.should.be.json;
                 res.body.should.deep.equal({
-                    success: false,
                     errors: [
                         '"title" is required',
                         '"fuel" is required',
@@ -161,10 +152,7 @@ describe('API Tests', () => {
     describe('DELETE', () => {
         it('Item gets deleted if it exists', done => {
             request(app).delete('/api/vehicles/1').send().end((err, res) => {
-                res.should.have.status(200);
-                res.should.be.json;
-
-                res.body.success.should.be.true;
+                res.should.have.status(204);
                 done();
             });
         });
@@ -172,9 +160,6 @@ describe('API Tests', () => {
         it('If item does not exist then 404 is returned', done => {
             request(app).delete('/api/vehicles/1000').send().end((err, res) => {
                 res.should.have.status(404);
-                res.should.be.json;
-
-                res.body.success.should.be.false;
                 done();
             });
         });
